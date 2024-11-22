@@ -61,20 +61,4 @@ public class CallMeKnightSolverSequences
         [0] = [4, 6],
     }
         .ToFrozenDictionary();
-
-    private static readonly FrozenDictionary<byte, byte[]> _stepsPlus2 = new Dictionary<byte, byte[]>()
-    {
-        [1] = [1, 7, 0, 1, 3],
-        [2] = [2, 6, 2, 4],
-        [3] = [3, 9, 0, 1, 3],
-        [4] = [4, 8, 2, 4, 4, 6],
-        //[5] = [],
-        [6] = [6, 8, 2, 6, 4, 6],
-        [7] = [7, 9, 1, 7, 0],
-        [8] = [6, 8, 4, 8],
-        [9] = [7, 9, 3, 9, 0],
-        [0] = [3, 9, 0, 1, 7, 0],
-    }
-        .ToFrozenDictionary();
-
 }
