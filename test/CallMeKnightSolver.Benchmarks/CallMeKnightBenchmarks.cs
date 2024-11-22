@@ -1,21 +1,25 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Numerics;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 
 namespace CallMeKnightSolver.Benchmarks;
 
 [SimpleJob(RuntimeMoniker.Net90)]
+[SimpleJob(RuntimeMoniker.Net80)]
 [MemoryDiagnoser]
 public class CallMeKnightBenchmarks
 {
-    [Params(4, 10, 20)]
+    [Params(20, 25)]
     public int N { get; set; }
 
-    [Benchmark] public long Calculate() => CallMeKnight.Lib.CallMeKnightSolver.CalculateDistinctNumbers(N);
-    [Benchmark] public long CalculateLeafs() => CallMeKnight.Lib.CallMeKnightSolverLeafs.CalculateDistinctNumbers(N);
-    [Benchmark] public long CalculateLeafsPredefinedSteps() => CallMeKnight.Lib.CallMeKnightSolverLeafsPredefinedSteps.CalculateDistinctNumbers(N);
-    [Benchmark] public long CalculateSequences() => CallMeKnight.Lib.CallMeKnightSolverSequences.CalculateDistinctNumbers(N);
-    [Benchmark] public long CalculateSequencesImmutable() => CallMeKnight.Lib.CallMeKnightSolverSequencesImmutable.CalculateDistinctNumbers(N);
-    [Benchmark] public long CalculateSequences2Steps() => CallMeKnight.Lib.CallMeKnightSolverSequences2Steps.CalculateDistinctNumbers(N);
+    //[Benchmark] public long Calculate() => CallMeKnight.Lib.CallMeKnightSolver.CalculateDistinctNumbers(N);
+    //[Benchmark] public long CalculateLeafs() => CallMeKnight.Lib.CallMeKnightSolverLeafs.CalculateDistinctNumbers(N);
+    //[Benchmark] public long CalculateLeafsPredefinedSteps() => CallMeKnight.Lib.CallMeKnightSolverLeafsPredefinedSteps.CalculateDistinctNumbers(N);
+    //[Benchmark] public long CalculateSequences() => CallMeKnight.Lib.CallMeKnightSolverSequences.CalculateDistinctNumbers(N);
+    //[Benchmark] public long CalculateSequencesImmutable() => CallMeKnight.Lib.CallMeKnightSolverSequencesImmutable.CalculateDistinctNumbers(N);
+    [Benchmark(Baseline = true)] public long CalculateSequences2Steps() => CallMeKnight.Lib.CallMeKnightSolverSequences2Steps.CalculateDistinctNumbers(N);
+    [Benchmark] public ulong CalculateFrequencies() => CallMeKnight.Lib.CallMeKnightSolverFrequencies.CalculateDistinctNumbers(N);
+    [Benchmark] public BigInteger CalculateFrequenciesBigInteger() => CallMeKnight.Lib.CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(N);
 }
 
 /*
@@ -49,4 +53,34 @@ public class CallMeKnightBenchmarks
    | CalculateSequences            | 20 |    165,850.344 us |   3,309.1878 us |   6,608.8060 us |    3000.0000 |    3000.0000 |  3000.0000 |  180234.47 KB |
    | CalculateSequencesImmutable   | 20 |    150,707.458 us |   3,003.9711 us |   8,273.8095 us |    2333.3333 |    2333.3333 |  2333.3333 |  180234.04 KB |
    | CalculateSequences2Steps      | 20 |    114,855.586 us |   2,253.2482 us |   3,508.0362 us |    2600.0000 |    2600.0000 |  2600.0000 |   73769.12 KB |
+
+
+   // * Summary *
+   
+   BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.4460/23H2/2023Update/SunValley3)
+   Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical cores
+   .NET SDK 9.0.100
+     [Host]   : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+     .NET 8.0 : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX2
+     .NET 9.0 : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+   
+   
+   | Method                         | Job      | Runtime  | N  | Mean            | Error         | StdDev         | Median          | Ratio | RatioSD | Gen0      | Gen1      | Gen2      | Allocated     | Alloc Ratio |
+   |------------------------------- |--------- |--------- |--- |----------------:|--------------:|---------------:|----------------:|------:|--------:|----------:|----------:|----------:|--------------:|------------:|
+   | CalculateSequences2Steps       | .NET 8.0 | .NET 8.0 | 20 |   150,045.61 us |  2,988.550 us |   5,464.733 us |   150,789.64 us | 1.001 |    0.05 | 1750.0000 | 1750.0000 | 1750.0000 |    73768.6 KB |       1.000 |
+   | CalculateFrequencies           | .NET 8.0 | .NET 8.0 | 20 |        28.90 us |      0.257 us |       0.201 us |        28.89 us | 0.000 |    0.00 |   24.1699 |    0.1526 |         - |     105.37 KB |       0.001 |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 20 |        68.53 us |      1.580 us |       4.583 us |        67.96 us | 0.000 |    0.00 |   19.4092 |         - |         - |      89.69 KB |       0.001 |
+   |                                |          |          |    |                 |               |                |                 |       |         |           |           |           |               |             |
+   | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 20 |   128,390.23 us |  2,544.757 us |   7,135.772 us |   126,660.20 us | 1.003 |    0.08 | 2200.0000 | 2200.0000 | 2200.0000 |   73768.85 KB |       1.000 |
+   | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 20 |        27.41 us |      0.408 us |       0.341 us |        27.45 us | 0.000 |    0.00 |   23.6511 |    0.0610 |         - |     103.34 KB |       0.001 |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 20 |        65.07 us |      1.348 us |       3.953 us |        64.61 us | 0.001 |    0.00 |   19.4092 |         - |         - |      89.69 KB |       0.001 |
+   |                                |          |          |    |                 |               |                |                 |       |         |           |           |           |               |             |
+   | CalculateSequences2Steps       | .NET 8.0 | .NET 8.0 | 25 | 4,432,236.18 us | 85,236.321 us |  98,158.274 us | 4,401,777.10 us | 1.000 |    0.03 | 7000.0000 | 7000.0000 | 7000.0000 | 2097197.84 KB |       1.000 |
+   | CalculateFrequencies           | .NET 8.0 | .NET 8.0 | 25 |        36.99 us |      1.021 us |       2.995 us |        36.04 us | 0.000 |    0.00 |   28.6255 |    0.1831 |         - |     127.19 KB |       0.000 |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 25 |        86.84 us |      1.693 us |       2.966 us |        86.73 us | 0.000 |    0.00 |   24.6582 |         - |         - |     113.72 KB |       0.000 |
+   |                                |          |          |    |                 |               |                |                 |       |         |           |           |           |               |             |
+   | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 25 | 3,086,478.18 us | 61,641.609 us | 145,296.536 us | 3,040,724.35 us | 1.002 |    0.07 | 7000.0000 | 7000.0000 | 7000.0000 | 2097197.73 KB |       1.000 |
+   | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 25 |        35.97 us |      0.936 us |       2.745 us |        35.17 us | 0.000 |    0.00 |   28.1982 |    0.1831 |         - |     125.09 KB |       0.000 |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25 |        81.71 us |      1.560 us |       2.607 us |        81.78 us | 0.000 |    0.00 |   24.6582 |         - |         - |     113.72 KB |       0.000 |
+   
  */
