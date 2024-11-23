@@ -83,4 +83,33 @@ public class CallMeKnightBenchmarks
    | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 25 |        35.97 us |      0.936 us |       2.745 us |        35.17 us | 0.000 |    0.00 |   28.1982 |    0.1831 |         - |     125.09 KB |       0.000 |
    | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25 |        81.71 us |      1.560 us |       2.607 us |        81.78 us | 0.000 |    0.00 |   24.6582 |         - |         - |     113.72 KB |       0.000 |
    
+
+// * Summary *
+   
+   BenchmarkDotNet v0.14.0, Windows 10 (10.0.19045.5131/22H2/2022Update)
+   12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+   .NET SDK 9.0.100
+     [Host]   : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+     .NET 8.0 : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX2
+     .NET 9.0 : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+   
+   
+   | Method                         | Job      | Runtime  | N  | Mean            | Error         | StdDev         | Median          | Ratio | RatioSD | Gen0      | Gen1      | Gen2      | Allocated     | Alloc Ratio |
+   |------------------------------- |--------- |--------- |--- |----------------:|--------------:|---------------:|----------------:|------:|--------:|----------:|----------:|----------:|--------------:|------------:|
+   | CalculateSequences2Steps       | .NET 8.0 | .NET 8.0 | 20 |    79,051.50 us |  1,580.888 us |   3,600.481 us |    78,987.61 us | 1.002 |    0.06 | 2000.0000 | 2000.0000 | 2000.0000 |   73771.23 KB |       1.000 |
+   | CalculateFrequencies           | .NET 8.0 | .NET 8.0 | 20 |        14.78 us |      0.289 us |       0.242 us |        14.78 us | 0.000 |    0.00 |    9.0027 |    0.7782 |         - |     105.35 KB |       0.001 |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 20 |        43.13 us |      2.847 us |       8.395 us |        43.69 us | 0.001 |    0.00 |    7.2632 |         - |         - |      89.69 KB |       0.001 |
+   |                                |          |          |    |                 |               |                |                 |       |         |           |           |           |               |             |
+   | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 20 |    78,277.31 us |  3,181.529 us |   9,330.875 us |    80,821.19 us | 1.017 |    0.19 | 1555.5556 | 1555.5556 | 1555.5556 |   73771.77 KB |       1.000 |
+   | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 20 |        17.66 us |      0.343 us |       0.381 us |        17.61 us | 0.000 |    0.00 |    8.9722 |    0.7629 |         - |        105 KB |       0.001 |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 20 |        56.13 us |      3.871 us |      11.415 us |        57.80 us | 0.001 |    0.00 |    7.2632 |         - |         - |      89.69 KB |       0.001 |
+   |                                |          |          |    |                 |               |                |                 |       |         |           |           |           |               |             |
+   | CalculateSequences2Steps       | .NET 8.0 | .NET 8.0 | 25 | 2,527,283.50 us | 49,896.130 us | 118,583.441 us | 2,518,603.20 us | 1.002 |    0.07 | 8000.0000 | 8000.0000 | 8000.0000 | 2097198.36 KB |       1.000 |
+   | CalculateFrequencies           | .NET 8.0 | .NET 8.0 | 25 |        20.41 us |      0.405 us |       0.554 us |        20.27 us | 0.000 |    0.00 |   10.5286 |    0.9460 |         - |      124.4 KB |       0.000 |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 25 |        67.12 us |      2.203 us |       6.495 us |        68.52 us | 0.000 |    0.00 |    9.2773 |         - |         - |     113.72 KB |       0.000 |
+   |                                |          |          |    |                 |               |                |                 |       |         |           |           |           |               |             |
+   | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 25 | 1,582,812.18 us | 31,116.636 us |  52,838.413 us | 1,579,046.80 us | 1.001 |    0.05 | 8000.0000 | 8000.0000 | 8000.0000 |  2097198.4 KB |       1.000 |
+   | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 25 |        19.01 us |      0.379 us |       0.493 us |        18.98 us | 0.000 |    0.00 |   10.5286 |    0.9460 |         - |      123.8 KB |       0.000 |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25 |        60.17 us |      2.194 us |       6.469 us |        62.79 us | 0.000 |    0.00 |    9.2773 |         - |         - |     113.72 KB |       0.000 |
+   
  */
