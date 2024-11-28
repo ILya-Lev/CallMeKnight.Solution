@@ -20,6 +20,8 @@ public class CallMeKnightSolverTests(ITestOutputHelper output)
     [InlineData(10, 14912)]
     public void CalculateDistinctNumbers_SmallLength_MatchExpectations(int n, int expectedAmount)
     {
+        ChatGptSolution.CountDistinctNumbers(n).Should().Be(expectedAmount);
+        KnightDialerMatrixBased.KnightDialer(n).Should().Be(expectedAmount);
         CallMeKnightSolverFrequencies.CalculateDistinctNumbers(n).Should().Be((ulong)expectedAmount);
     }
 
@@ -51,10 +53,18 @@ public class CallMeKnightSolverTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void CalculateDistinctNumbers_VeryLong_MatchExpectations()
+    public void CalculateDistinctNumbers_VeryLong_Observe()
     {
-        var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(10_000);
+        var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(100);
         output.WriteLine(result.ToString());//0.5s 
+    }
+
+    [Fact]
+    public void CalculateDistinctNumbers_TimeFrame10Seconds_Observe()
+    {
+        var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(200_000);
+        //output.WriteLine(result.ToString());//86s -> 20s ! by reusing arrays instead of dictionaries
+        output.WriteLine($"result contains {result.GetByteCount().ToString()} bytes");
     }
 
 }

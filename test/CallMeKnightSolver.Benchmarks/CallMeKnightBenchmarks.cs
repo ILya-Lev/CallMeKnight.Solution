@@ -9,7 +9,7 @@ namespace CallMeKnightSolver.Benchmarks;
 [MemoryDiagnoser]
 public class CallMeKnightBenchmarks
 {
-    [Params(20, 25)]
+    [Params(20, 25, 1000, 10_000)]
     public int N { get; set; }
 
     //[Benchmark] public long Calculate() => CallMeKnight.Lib.CallMeKnightSolver.CalculateDistinctNumbers(N);
@@ -17,8 +17,8 @@ public class CallMeKnightBenchmarks
     //[Benchmark] public long CalculateLeafsPredefinedSteps() => CallMeKnight.Lib.CallMeKnightSolverLeafsPredefinedSteps.CalculateDistinctNumbers(N);
     //[Benchmark] public long CalculateSequences() => CallMeKnight.Lib.CallMeKnightSolverSequences.CalculateDistinctNumbers(N);
     //[Benchmark] public long CalculateSequencesImmutable() => CallMeKnight.Lib.CallMeKnightSolverSequencesImmutable.CalculateDistinctNumbers(N);
-    [Benchmark(Baseline = true)] public long CalculateSequences2Steps() => CallMeKnight.Lib.CallMeKnightSolverSequences2Steps.CalculateDistinctNumbers(N);
-    [Benchmark] public ulong CalculateFrequencies() => CallMeKnight.Lib.CallMeKnightSolverFrequencies.CalculateDistinctNumbers(N);
+    //[Benchmark(Baseline = true)] public long CalculateSequences2Steps() => CallMeKnight.Lib.CallMeKnightSolverSequences2Steps.CalculateDistinctNumbers(N);
+    //[Benchmark] public ulong CalculateFrequencies() => CallMeKnight.Lib.CallMeKnightSolverFrequencies.CalculateDistinctNumbers(N);
     [Benchmark] public BigInteger CalculateFrequenciesBigInteger() => CallMeKnight.Lib.CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(N);
 }
 
@@ -139,5 +139,57 @@ public class CallMeKnightBenchmarks
    | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 25 | 2,380,063.45 us | 73,585.608 us | 215,813.866 us | 2,322,811.10 us | 1.008 |    0.13 | 11000.0000 | 11000.0000 | 6000.0000 | 2097190.17 KB |       1.000 |
    | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 25 |        43.20 us |      2.296 us |       6.696 us |        40.44 us | 0.000 |    0.00 |     6.2866 |     0.4272 |         - |     117.63 KB |       0.000 |
    | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25 |        64.10 us |      1.228 us |       1.681 us |        63.92 us | 0.000 |    0.00 |     5.8594 |          - |         - |     113.72 KB |       0.000 |
+   
+
+optimized in terms of swapping arrays instead of creating dictionaries for the frequency table
+// * Summary *
+   
+   BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.4541/23H2/2023Update/SunValley3)
+   Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical cores
+   .NET SDK 9.0.100
+     [Host]   : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+     .NET 8.0 : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX2
+     .NET 9.0 : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+   
+   
+   | Method                         | Job      | Runtime  | N  | Mean             | Error          | StdDev          | Median           | Ratio | RatioSD | Gen0      | Gen1      | Gen2      | Allocated    | Alloc Ratio |
+   |------------------------------- |--------- |--------- |--- |-----------------:|---------------:|----------------:|-----------------:|------:|--------:|----------:|----------:|----------:|-------------:|------------:|
+   | CalculateSequences2Steps       | .NET 8.0 | .NET 8.0 | 20 |   160,805.420 us |  3,170.1079 us |   4,935.4765 us |   160,875.913 us | 1.001 |    0.04 | 1750.0000 | 1750.0000 | 1750.0000 |   75540002 B |       1.000 |
+   | CalculateFrequencies           | .NET 8.0 | .NET 8.0 | 20 |        34.896 us |      0.6548 us |       0.9179 us |        34.499 us | 0.000 |    0.00 |   24.8413 |    0.8545 |         - |     110601 B |       0.001 |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 20 |         4.655 us |      0.0863 us |       0.0807 us |         4.652 us | 0.000 |    0.00 |    0.0763 |         - |         - |        368 B |       0.000 |
+   
+   | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 20 |   111,953.300 us |  2,213.9115 us |   5,635.1121 us |   111,361.550 us | 1.002 |    0.07 | 2000.0000 | 1800.0000 | 1800.0000 |   75539096 B |       1.000 |
+   | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 20 |        29.045 us |      0.5332 us |       1.0524 us |        28.724 us | 0.000 |    0.00 |   24.2920 |    0.3052 |         - |     108679 B |       0.001 |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 20 |         2.927 us |      0.0458 us |       0.0471 us |         2.929 us | 0.000 |    0.00 |    0.0763 |         - |         - |        368 B |       0.000 |
+
+   | CalculateSequences2Steps       | .NET 8.0 | .NET 8.0 | 25 | 3,631,587.320 us | 70,676.9016 us | 156,615.1438 us | 3,624,515.100 us | 1.002 |    0.06 | 8000.0000 | 8000.0000 | 8000.0000 | 2147531088 B |       1.000 |
+   | CalculateFrequencies           | .NET 8.0 | .NET 8.0 | 25 |        38.719 us |      0.7655 us |       1.3408 us |        38.063 us | 0.000 |    0.00 |   29.1748 |    0.3662 |         - |     132645 B |       0.000 |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 25 |         5.843 us |      0.1141 us |       0.1121 us |         5.837 us | 0.000 |    0.00 |    0.0992 |         - |         - |        496 B |       0.000 |
+   
+   | CalculateSequences2Steps       | .NET 9.0 | .NET 9.0 | 25 | 2,654,386.895 us | 49,484.5973 us |  60,771.5347 us | 2,648,842.450 us | 1.001 |    0.03 | 8000.0000 | 8000.0000 | 8000.0000 | 2147531248 B |       1.000 |
+   | CalculateFrequencies           | .NET 9.0 | .NET 9.0 | 25 |        37.892 us |      1.1415 us |       3.3479 us |        36.700 us | 0.000 |    0.00 |   28.6255 |    0.3052 |         - |     129980 B |       0.000 |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25 |         3.781 us |      0.0716 us |       0.1327 us |         3.746 us | 0.000 |    0.00 |    0.0992 |         - |         - |        496 B |       0.000 |
+   
+
+// * Summary *
+   
+   BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.4541/23H2/2023Update/SunValley3)
+   Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical cores
+   .NET SDK 9.0.100
+     [Host]   : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+     .NET 8.0 : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX2
+     .NET 9.0 : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+   
+   
+   | Method                         | Job      | Runtime  | N     | Mean          | Error       | StdDev        | Gen0       | Gen1     | Allocated   |
+   |------------------------------- |--------- |--------- |------ |--------------:|------------:|--------------:|-----------:|---------:|------------:|
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 20    |      4.757 us |   0.0931 us |     0.1449 us |     0.0763 |        - |       368 B |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 20    |      2.876 us |   0.0557 us |     0.0833 us |     0.0763 |        - |       368 B |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 25    |      5.649 us |   0.0863 us |     0.0807 us |     0.0992 |        - |       496 B |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25    |      3.671 us |   0.0732 us |     0.1074 us |     0.1030 |        - |       496 B |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 1000  |    905.989 us |  17.7791 us |    26.0604 us |   432.6172 |   5.8594 |   2_035_808 B |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 1000  |    968.900 us |  17.3693 us |    29.4943 us |   431.6406 |   5.8594 |   2_035_809 B |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 10000 | 38,589.702 us | 756.1688 us | 1,344.0894 us | 32846.1538 | 384.6154 | 154_850_249 B |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 10000 | 38,924.189 us | 774.8648 us | 1,780.3809 us | 32857.1429 | 357.1429 | 154_850_197 B |
    
  */

@@ -10,34 +10,36 @@ public class CallMeKnightSolverFrequenciesBigInteger
         if (n < 1) return 0;
         if (n == 1) return 10;//for button with digit 5 - it is the only case to take it into account
 
-        BigInteger total = 0L;
+        //BigInteger total = 0L;
+        //foreach (var startLocation in _steps.Keys)
+        //    total += GenerateDistinctNumbersForLocation(startLocation, n);
 
-        foreach (var startLocation in _steps.Keys)
-            total += GenerateDistinctNumbersForLocation(startLocation, n);
-
-        return total;
+        return GenerateDistinctNumbersForLocation(0, n);
     }
 
     private static BigInteger GenerateDistinctNumbersForLocation(byte startLocation, int n)
     {
-        var layer = new Dictionary<byte, BigInteger> { [startLocation] = 1 };
+        var layer = new BigInteger[10] { 1, 1, 1, 1, 1, 0, 1, 1, 1, 1 };
+        var nextLayer = new BigInteger[10];
 
         for (int level = 1; level < n; level++)
         {
-            var nextLayer = new Dictionary<byte, BigInteger>();
-            foreach (var (digit, amount) in layer)
+            for(byte digit = 0; digit < 10; digit++)
             {
+                if (digit == 5) continue;
+
                 foreach (var nextDigit in _steps[digit])
                 {
-                    nextLayer.TryAdd(nextDigit, 0);
-                    nextLayer[nextDigit] += amount;
+                    nextLayer[nextDigit] += layer[digit];
                 }
             }
-            layer = nextLayer;
+
+            (layer, nextLayer) = (nextLayer, layer);
+            Array.Clear(nextLayer);
         }
 
         BigInteger leafsNumber = 0;
-        foreach (var (_, amount) in layer)
+        foreach (var amount in layer)
         {
             leafsNumber += amount;
         }
