@@ -60,6 +60,7 @@ public class CallMeKnightSolverAdjacencyMatrix
         }
         .ToFrozenDictionary();
 
+    //I have to implement my own type as MathNet Matrix does not support T=BigInteger
     private record class M<T>(int Height, int Width) where T : INumber<T>
     {
         private readonly T[,] _matrix = new T[Height, Width];
