@@ -23,6 +23,7 @@ public class CallMeKnightSolverTests(ITestOutputHelper output)
         ChatGptSolution.CountDistinctNumbers(n).Should().Be(expectedAmount);
         KnightDialerMatrixBased.KnightDialer(n).Should().Be(expectedAmount);
         CallMeKnightSolverFrequencies.CalculateDistinctNumbers(n).Should().Be((ulong)expectedAmount);
+        CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(n).Should().Be(expectedAmount);
     }
 
     [Theory]
@@ -34,6 +35,7 @@ public class CallMeKnightSolverTests(ITestOutputHelper output)
     public void CalculateDistinctNumbers_MidLength_MatchExpectations(int n, int expectedAmount)
     {
         CallMeKnightSolverFrequencies.CalculateDistinctNumbers(n).Should().Be((ulong)expectedAmount);
+        CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(n).Should().Be(expectedAmount);
     }
 
     [Fact]
@@ -50,21 +52,31 @@ public class CallMeKnightSolverTests(ITestOutputHelper output)
 
         CallMeKnightSolverFrequencies.CalculateDistinctNumbers(51).Should().Be(8261652954021363712UL);
         CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(51).Should().Be(8261652954021363712UL);
+        CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(51).Should().Be(8261652954021363712UL);
     }
 
     [Fact]
     public void CalculateDistinctNumbers_VeryLong_Observe()
     {
-        var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(100);
-        output.WriteLine(result.ToString());//0.5s 
+        //var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(100);   //0.5s
+        var result = CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(10_000);  //0.032s
+        output.WriteLine(result.ToString());
     }
 
     [Fact]
     public void CalculateDistinctNumbers_TimeFrame10Seconds_Observe()
     {
-        var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(200_000);
+        //var result = CallMeKnightSolverFrequenciesBigInteger.CalculateDistinctNumbers(200_000);
         //output.WriteLine(result.ToString());//86s -> 20s ! by reusing arrays instead of dictionaries
-        output.WriteLine($"result contains {result.GetByteCount().ToString()} bytes");
+        
+        //200k 0.192s
+        //4M 16.5s, 3M 10.155s, 2M 5s, 1M 2.5s
+        var result = CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(1_000_000);
+        
+        output.WriteLine($"result contains {result.GetByteCount()} bytes");
+        output.WriteLine($"result contains {result.GetBitLength()} bits");
+        var start = result.ToByteArray().SkipWhile(d => d == 0).Take(5);
+        var end = result.ToByteArray().TakeLast(5);
+        output.WriteLine($"result= {string.Join("", start.Select(d => d.ToString()))}...{string.Join("", end.Select(d => d.ToString()))}");
     }
-
 }
