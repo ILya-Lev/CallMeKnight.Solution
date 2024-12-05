@@ -70,8 +70,9 @@ public class CallMeKnightSolverTests(ITestOutputHelper output)
         //output.WriteLine(result.ToString());//86s -> 20s ! by reusing arrays instead of dictionaries
         
         //200k 0.192s
-        //4M 16.5s, 3M 10.155s, 2M 5s, 1M 2.5s
-        var result = CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(1_000_000);
+        //12 cores => 4M 16.5s, 3M 10.155s, 2M 5s, 1M 2.5s
+        //20 cores => 1M 1s, 2M 2.8s; 3M 5.1s; 4M 7.95s; 5M 11.77s
+        var result = CallMeKnightSolverAdjacencyMatrix.CalculateDistinctNumbers(5_000_000);
         
         output.WriteLine($"result contains {result.GetByteCount()} bytes");
         output.WriteLine($"result contains {result.GetBitLength()} bits");
