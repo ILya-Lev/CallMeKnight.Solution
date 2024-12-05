@@ -231,8 +231,38 @@ optimized in terms of swapping arrays instead of creating dictionaries for the f
    | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 10000 | 37,131.185 us | 737.3874 us | 1,080.8531 us |  1.00 |    0.04 | 32857.1429 | 357.1429 | 154850245 B |        1.00 |
    | CalculateAdjacent              | .NET 9.0 | .NET 9.0 | 10000 |  2,001.438 us |  39.1050 us |    46.5517 us |  0.05 |    0.00 |   632.8125 | 218.7500 |   3132511 B |        0.02 |
    
-   // * Warnings *
-   MultimodalDistribution
-     CallMeKnightBenchmarks.CalculateFrequenciesBigInteger: .NET 9.0 -> It seems that the distribution can have several modes (mValue = 3)
+   // * Summary *
    
+   BenchmarkDotNet v0.14.0, Windows 10 (10.0.19045.5131/22H2/2022Update)
+   12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+   .NET SDK 9.0.100
+     [Host]   : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+     .NET 8.0 : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX2
+     .NET 9.0 : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+   
+   | Method                         | Job      | Runtime  | N     | Mean          | Error         | StdDev        | Median        | Ratio | RatioSD | Gen0       | Gen1     | Gen2    | Allocated   | Alloc Ratio |
+   |------------------------------- |--------- |--------- |------ |--------------:|--------------:|--------------:|--------------:|------:|--------:|-----------:|---------:|--------:|------------:|------------:|
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 20    |      3.481 us |     0.0352 us |     0.0330 us |      3.475 us |  1.00 |    0.01 |     0.0267 |        - |       - |       368 B |        1.00 |
+   | CalculateAdjacent              | .NET 8.0 | .NET 8.0 | 20    |     57.543 us |     0.9924 us |     1.3249 us |     57.274 us | 16.53 |    0.40 |     3.1738 |   0.1221 |       - |     40155 B |      109.12 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 20    |      1.692 us |     0.0283 us |     0.0265 us |      1.684 us |  1.00 |    0.02 |     0.0286 |        - |       - |       368 B |        1.00 |
+   | CalculateAdjacent              | .NET 9.0 | .NET 9.0 | 20    |     40.246 us |     0.8003 us |     0.9527 us |     39.930 us | 23.79 |    0.66 |     3.0518 |   0.1831 |       - |     38509 B |      104.64 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 25    |      4.405 us |     0.0711 us |     0.1085 us |      4.369 us |  1.00 |    0.03 |     0.0381 |        - |       - |       496 B |        1.00 |
+   | CalculateAdjacent              | .NET 8.0 | .NET 8.0 | 25    |     48.864 us |     0.7763 us |     0.7624 us |     48.521 us | 11.10 |    0.31 |     2.8076 |   0.1221 |       - |     35249 B |       71.07 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 25    |      2.079 us |     0.0327 us |     0.0290 us |      2.076 us |  1.00 |    0.02 |     0.0381 |        - |       - |       496 B |        1.00 |
+   | CalculateAdjacent              | .NET 9.0 | .NET 9.0 | 25    |     34.760 us |     0.6725 us |     1.2126 us |     34.269 us | 16.72 |    0.62 |     2.6855 |   0.1221 |       - |     33803 B |       68.15 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 1000  |    598.075 us |    10.3065 us |     9.1365 us |    595.449 us |  1.00 |    0.02 |   162.1094 |   1.9531 |       - |   2035808 B |        1.00 |
+   | CalculateAdjacent              | .NET 8.0 | .NET 8.0 | 1000  |    244.135 us |     4.6176 us |     7.5869 us |    242.800 us |  0.41 |    0.01 |    41.0156 |   9.7656 |       - |    515123 B |        0.25 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 1000  |    675.043 us |    11.6985 us |    10.9428 us |    676.636 us |  1.00 |    0.02 |   162.1094 |   1.9531 |       - |   2035808 B |        1.00 |
+   | CalculateAdjacent              | .NET 9.0 | .NET 9.0 | 1000  |    233.564 us |     6.2459 us |    18.2195 us |    231.920 us |  0.35 |    0.03 |    41.0156 |   8.7891 |       - |    512191 B |        0.25 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 8.0 | .NET 8.0 | 10000 | 28,876.476 us | 1,057.4412 us | 3,101.2921 us | 27,654.822 us |  1.01 |    0.15 | 12312.5000 | 718.7500 | 31.2500 | 154850227 B |        1.00 |
+   | CalculateAdjacent              | .NET 8.0 | .NET 8.0 | 10000 |  1,239.662 us |    24.5402 us |    22.9549 us |  1,244.213 us |  0.04 |    0.00 |   257.8125 | 140.6250 |       - |   3143065 B |        0.02 |
+   |                                |          |          |       |               |               |               |               |       |         |            |          |         |             |             |
+   | CalculateFrequenciesBigInteger | .NET 9.0 | .NET 9.0 | 10000 | 26,146.217 us |   448.9881 us |   499.0491 us | 26,055.987 us |  1.00 |    0.03 | 12312.5000 | 718.7500 | 31.2500 | 154850236 B |        1.00 |
+   | CalculateAdjacent              | .NET 9.0 | .NET 9.0 | 10000 |  1,207.017 us |    23.9177 us |    54.4727 us |  1,189.359 us |  0.05 |    0.00 |   261.7188 | 152.3438 |       - |   3140221 B |        0.02 |
  */
